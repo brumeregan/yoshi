@@ -23,7 +23,6 @@ const path = require('path');
 // with babel/typescript, this may be run separately for every worker
 setupRequireHooks();
 
-
 const serverLogPrefixer = () => {
   return new stream.Transform({
     transform(chunk, encoding, callback) {
