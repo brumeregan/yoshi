@@ -17,6 +17,7 @@ const { shouldDeployToCDN } = require('yoshi-helpers/queries');
 const { getProcessOnPort } = require('yoshi-helpers/utils');
 const { setupRequireHooks } = require('yoshi-helpers/require-hooks');
 const cdnProxy = require('./cdnProxy');
+const loadJestYoshiConfig = require('yoshi-config/jest');
 
 // the user's config is loaded outside of a jest runtime and should be transpiled
 // with babel/typescript, this may be run separately for every worker
@@ -32,8 +33,8 @@ const serverLogPrefixer = () => {
 };
 
 module.exports = async () => {
-  const loadYoshiConfig = require('yoshi-config/jest.js');
-  const jestYoshiConfig = loadYoshiConfig();
+  const jestYoshiConfig = loadJestYoshiConfig();
+
   // a bit hacky, run puppeteer setup only if it's required
   if (await shouldRunE2Es()) {
     // start with a few new lines
