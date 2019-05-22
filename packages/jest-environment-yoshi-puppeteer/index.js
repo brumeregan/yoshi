@@ -7,7 +7,9 @@ const { setupRequireHooks } = require('yoshi-helpers/require-hooks');
 // with babel/typescript, this may be run separately for every worker
 setupRequireHooks();
 
-const jestYoshiConfig = require('yoshi-config/jest');
+const loadYoshiConfig = require('yoshi-config/jest.js');
+
+const jestYoshiConfig = loadYoshiConfig();
 
 const ParentEnvironment = jestYoshiConfig.bootstrap
   ? require('jest-environment-yoshi-bootstrap')
