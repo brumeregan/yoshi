@@ -17,12 +17,12 @@ const { shouldDeployToCDN } = require('yoshi-helpers/queries');
 const { getProcessOnPort } = require('yoshi-helpers/utils');
 const { setupRequireHooks } = require('yoshi-helpers/require-hooks');
 const cdnProxy = require('./cdnProxy');
+const path = require('path');
 
 // the user's config is loaded outside of a jest runtime and should be transpiled
 // with babel/typescript, this may be run separately for every worker
 setupRequireHooks();
 
-const jestYoshiConfig = require('yoshi-config/jest');
 
 const serverLogPrefixer = () => {
   return new stream.Transform({
@@ -33,7 +33,15 @@ const serverLogPrefixer = () => {
   });
 };
 
+const requireUncached = module => {
+  delete require.cache[require.resolve(module)];
+  return require(module);
+};
+
 module.exports = async () => {
+  const configPath = path.join(process.cwd(), 'jest-yoshi.config.js');
+  const jestYoshiConfig = requireUncached(configPath);
+
   // a bit hacky, run puppeteer setup only if it's required
   if (await shouldRunE2Es()) {
     // start with a few new lines
